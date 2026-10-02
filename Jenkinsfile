@@ -1,3 +1,4 @@
+```groovy
 pipeline {
     agent any
 
@@ -20,5 +21,27 @@ pipeline {
                 sh 'docker image inspect devops-cicd-app'
             }
         }
+
+        stage('Deploy') {
+            steps {
+                sh 'docker rm -f devops-cicd-app || true'
+                sh 'docker run -d --name devops-cicd-app -p 80:80 devops-cicd-app'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CI/CD pipeline completed successfully!'
+        }
+
+        failure {
+            echo 'Pipeline failed!'
+        }
+
+        always {
+            echo 'Pipeline execution finished.'
+        }
     }
 }
+```
